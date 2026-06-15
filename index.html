@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#124e96">
+  <title>E nena Piyasa | Student Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <img src="assets/enp-logo.jpg" alt="E nena Piyasa logo">
+        <div><strong>E nena Piyasa</strong><span>Computer Technology Center</span></div>
+      </div>
+      <nav class="nav-list">
+        <button class="nav-item active" data-view="dashboard"><span>▦</span> Dashboard</button>
+        <button class="nav-item" data-view="students"><span>♙</span> Students</button>
+        <button class="nav-item" data-view="attendance"><span>✓</span> Day Register</button>
+        <button class="nav-item" data-view="kidAttendance"><span>★</span> Kid Register</button>
+        <button class="nav-item" data-view="history"><span>◷</span> Register History</button>
+        <button class="nav-item" data-view="payments"><span>₨</span> Payments</button>
+        <button class="nav-item" data-view="receiptLookup"><span>▤</span> Receipt Lookup</button>
+        <div class="course-nav">
+          <span class="course-nav-title">COURSES</span>
+          <button class="course-nav-item" data-course-nav="ICTT"><span class="course-dot blue-dot"></span><strong>ICTT</strong><small data-course-count="ICTT">0</small></button>
+          <button class="course-nav-item" data-course-nav="Graphic Design"><span class="course-dot purple-dot"></span><strong>Graphic Design</strong><small data-course-count="Graphic Design">0</small></button>
+          <button class="course-nav-item" data-course-nav="School ICT Book Grade 6-11"><span class="course-dot gold-dot"></span><strong>School ICT Book</strong><small data-course-count="School ICT Book Grade 6-11">0</small></button>
+          <button class="course-nav-item" data-course-nav="Kid Course"><span class="course-dot cyan-dot"></span><strong>Kid Course</strong><small data-course-count="Kid Course">0</small></button>
+        </div>
+      </nav>
+      <div class="sidebar-note">
+        <span class="live-dot"></span>
+        <div><strong>System ready</strong><small>Data auto-saved locally</small></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-button menu-button" id="menuButton" aria-label="Open menu">☰</button>
+        <div>
+          <p class="eyebrow">MANAGEMENT SYSTEM</p>
+          <h1 id="pageTitle">Dashboard</h1>
+        </div>
+        <div class="topbar-actions">
+          <div class="today-pill"><span>●</span><div><small>Today</small><strong id="todayLabel"></strong></div></div>
+          <button class="theme-toggle" id="themeToggle" aria-label="Switch to dark mode" title="Switch to dark mode"><span id="themeIcon">☾</span></button>
+          <button class="button primary" id="quickAdd">+ Add Student</button>
+          <div class="profile-wrap">
+            <button class="profile-button" id="profileButton" aria-label="Open profile menu"><span id="profileInitials">AD</span></button>
+            <div class="profile-menu" id="profileMenu">
+              <div class="profile-menu-head"><span class="profile-avatar" id="menuProfileInitials">AD</span><div><strong id="menuProfileName">Administrator</strong><small id="menuProfileRole">Center Admin</small></div></div>
+              <button id="openProfile">Profile Settings</button>
+              <button id="lockSystem">Lock System</button>
+              <button class="danger-link" id="logoutSystem">Logout</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="content view active" id="dashboardView">
+        <div class="welcome-banner">
+          <div>
+            <span class="banner-tag">E nena Piyasa</span>
+            <h2>Student operations,<br><em>all in one place.</em></h2>
+            <p>Manage registrations, payments and daily attendance with a clear view of every class group.</p>
+            <button class="button light" data-go="attendance">Mark today's register →</button>
+          </div>
+          <div class="banner-art" aria-hidden="true">
+            <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+            <div class="laptop">ENP<span>Technology Center</span></div>
+          </div>
+        </div>
+
+        <div class="stat-grid">
+          <article class="stat-card green"><div class="stat-icon">♙</div><div><span>Total Students</span><strong id="statStudents">0</strong><small id="statActive">0 active registrations</small></div></article>
+          <article class="stat-card blue"><div class="stat-icon">✓</div><div><span>Present Today</span><strong id="statPresent">0</strong><small id="statAttendanceRate">0% attendance rate</small></div></article>
+          <article class="stat-card gold"><div class="stat-icon">₨</div><div><span>Collected Fees</span><strong id="statCollected">Rs. 0</strong><small id="statOutstanding">Rs. 0 outstanding</small></div></article>
+          <article class="stat-card purple"><div class="stat-icon">◫</div><div><span>Class Days</span><strong id="statGroups">0</strong><small>Monday to Saturday batches</small></div></article>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="panel">
+            <div class="panel-head"><div><span class="section-kicker">OVERVIEW</span><h3>Student distribution</h3></div><button class="text-button" data-go="students">View students →</button></div>
+            <div class="distribution" id="distribution"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-head"><div><span class="section-kicker">ATTENTION</span><h3>Payment follow-up</h3></div><button class="text-button" data-go="payments">View all →</button></div>
+            <div id="paymentFollowup" class="followup-list"></div>
+          </article>
+        </div>
+        <article class="panel">
+          <div class="panel-head"><div><span class="section-kicker">RECENT</span><h3>Latest registrations</h3></div></div>
+          <div class="table-wrap"><table><thead><tr><th>Student</th><th>Contact</th><th>Course</th><th>Class Group</th><th>Payment</th></tr></thead><tbody id="recentStudents"></tbody></table></div>
+        </article>
+      </section>
+
+      <section class="content view" id="studentsView">
+        <div class="section-toolbar">
+          <div><p class="muted">Manage all registered students and their course details.</p></div>
+          <button class="button primary" id="addStudent">+ Add New Student</button>
+        </div>
+        <div class="filter-bar">
+          <label class="search-box"><span>⌕</span><input id="studentSearch" type="search" placeholder="Search name, ID, phone or course..."></label>
+          <select id="courseFilter"><option value="all">All courses</option><option value="ICTT">ICTT</option><option value="Graphic Design">Graphic Design</option><option value="School ICT Book Grade 6-11">School ICT Book Grade 6-11</option><option value="Kid Course">Kid Course</option></select>
+          <select id="groupFilter"><option value="all">All class days</option><option value="Monday">Monday</option><option value="Tuesday">Tuesday</option><option value="Wednesday">Wednesday</option><option value="Thursday">Thursday</option><option value="Friday">Friday</option><option value="Saturday">Saturday</option><option value="Flexible">Flexible / No Fixed Day</option></select>
+          <select id="statusFilter"><option value="all">All payment status</option><option value="Paid">Paid</option><option value="Pending">Pending</option></select>
+          <button class="button secondary" id="exportStudents">Export CSV</button>
+        </div>
+        <article class="panel table-panel">
+          <div class="table-summary"><strong id="studentCountLabel">0 students</strong><span>Showing filtered registration records</span></div>
+          <div class="table-wrap"><table><thead><tr><th>Student</th><th>Contact</th><th>Course</th><th>Class Group</th><th>Payment</th><th>Status</th><th></th></tr></thead><tbody id="studentsTable"></tbody></table></div>
+        </article>
+      </section>
+
+      <section class="content view" id="attendanceView">
+        <div class="section-toolbar">
+          <div><p class="muted">Select a date and mark each student's daily attendance.</p></div>
+          <div class="attendance-actions"><button class="button secondary" id="downloadAttendanceBackup">Download JSON Backup</button><label class="date-input">Register Date <input type="date" id="attendanceDate"></label><button class="button primary" id="saveAttendance">Save Register</button></div>
+        </div>
+        <div class="attendance-summary">
+          <div><span>Expected</span><strong id="expectedCount">0</strong></div><div><span>Present</span><strong id="presentCount">0</strong></div><div><span>Absent</span><strong id="absentCount">0</strong></div><div><span>Attendance</span><strong id="attendancePercent">0%</strong></div>
+        </div>
+        <div class="filter-bar">
+          <label class="search-box"><span>⌕</span><input id="attendanceSearch" type="search" placeholder="Search students..."></label>
+          <div class="selected-day"><small>Selected class day</small><strong id="selectedClassDay">Monday</strong></div>
+          <button class="button secondary" id="markAllPresent">Mark all present</button>
+          <button class="button ghost" id="clearAttendance">Clear marks</button>
+        </div>
+        <article class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>Student</th><th>Course</th><th>Class Group</th><th class="center">Present</th><th class="center">Absent</th></tr></thead><tbody id="attendanceTable"></tbody></table></div></article>
+      </section>
+
+      <section class="content view" id="kidAttendanceView">
+        <div class="section-toolbar"><div><p class="muted">Select the Kid Course students attending on any chosen date.</p></div><div class="attendance-actions"><label class="date-input">Register Date <input type="date" id="kidAttendanceDate"></label><button class="button primary" id="saveKidAttendance">Save Kid Register</button></div></div>
+        <div class="attendance-summary"><div><span>Selected</span><strong id="kidExpectedCount">0</strong></div><div><span>Present</span><strong id="kidPresentCount">0</strong></div><div><span>Absent</span><strong id="kidAbsentCount">0</strong></div><div><span>Attendance</span><strong id="kidAttendancePercent">0%</strong></div></div>
+        <article class="panel kid-attendance-panel"><div><span class="section-kicker">FLEXIBLE ATTENDANCE</span><h3>Choose Kid Course Students</h3><p class="muted">Select only the kids included in this register.</p></div><div class="kid-selector" id="kidSelector"></div></article>
+        <div class="filter-bar"><label class="search-box"><span>⌕</span><input id="kidAttendanceSearch" type="search" placeholder="Search Kid Course students..."></label><button class="button secondary" id="markAllKidsPresent">Mark selected present</button><button class="button ghost" id="clearKidAttendance">Clear marks</button></div>
+        <article class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>Student</th><th>Course</th><th>Class Group</th><th class="center">Present</th><th class="center">Absent</th></tr></thead><tbody id="kidAttendanceTable"></tbody></table></div></article>
+      </section>
+
+      <section class="content view" id="paymentsView">
+        <div class="section-toolbar"><div><p class="muted">Track course fees and record student payments.</p></div><button class="button secondary" id="exportPayments">Export CSV</button></div>
+        <div class="stat-grid compact">
+          <article class="stat-card green"><div><span>Total Course Fees</span><strong id="totalFees">Rs. 0</strong></div></article>
+          <article class="stat-card blue"><div><span>Total Collected</span><strong id="totalCollected">Rs. 0</strong></div></article>
+          <article class="stat-card gold"><div><span>Total Outstanding</span><strong id="totalOutstanding">Rs. 0</strong></div></article>
+        </div>
+        <div class="filter-bar"><label class="search-box"><span>⌕</span><input id="paymentSearch" type="search" placeholder="Search student or course..."></label><select id="paymentFilter"><option value="all">All payment status</option><option value="Paid">Paid</option><option value="Pending">Pending</option></select></div>
+        <article class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>Student</th><th>Course</th><th>Total Fee</th><th>Paid</th><th>Outstanding</th><th>Progress</th><th></th></tr></thead><tbody id="paymentsTable"></tbody></table></div></article>
+      </section>
+
+      <section class="content view" id="historyView">
+        <div class="section-toolbar"><div><p class="muted">Review every previously saved day register and reopen its complete report.</p></div><button class="button secondary" id="historyBackup">Download JSON Backup</button></div>
+        <div class="history-overview"><article><span>Total Registers</span><strong id="historyTotal">0</strong></article><article><span>Total Present Marks</span><strong id="historyPresent">0</strong></article><article><span>Total Absent Marks</span><strong id="historyAbsent">0</strong></article></div>
+        <div class="filter-bar"><label class="search-box"><span>⌕</span><input id="historySearch" type="search" placeholder="Search by date, day or course..."></label></div>
+        <div class="history-grid" id="historyGrid"></div>
+      </section>
+
+      <section class="content view" id="receiptLookupView">
+        <div class="section-toolbar"><div><p class="muted">Enter a receipt ID to verify and reopen a previously generated payment receipt.</p></div></div>
+        <article class="panel receipt-lookup-box"><div><span class="section-kicker">RECEIPT VERIFICATION</span><h3>Find Payment Receipt</h3><p class="muted">Example: ENP-20260615-123456</p></div><form id="receiptLookupForm"><input id="receiptLookupInput" placeholder="Enter Receipt ID" required><button class="button primary" type="submit">Find Receipt</button></form><p class="lookup-message" id="receiptLookupMessage"></p></article>
+        <div class="panel-head receipt-list-head"><div><span class="section-kicker">RECENT</span><h3>Generated Receipts</h3></div><strong id="receiptCount">0 receipts</strong></div>
+        <div class="receipt-grid" id="receiptGrid"></div>
+      </section>
+
+      <footer>Designed & Developed by <strong>Blank-X-Innovation</strong><span>•</span> E nena Piyasa Management System</footer>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="studentModal">
+    <div class="modal">
+      <div class="modal-head"><div><span class="section-kicker">REGISTRATION</span><h3 id="modalTitle">Add New Student</h3></div><button class="close-button" data-close="studentModal">×</button></div>
+      <form id="studentForm">
+        <input type="hidden" id="studentId">
+        <div class="form-grid">
+          <label class="full">Student Full Name<input id="studentName" required placeholder="Enter full name"></label>
+          <label>Phone Number<input id="studentPhone" required placeholder="07X XXX XXXX"></label>
+          <label>Guardian Phone<input id="guardianPhone" placeholder="07X XXX XXXX"></label>
+          <label class="full">Course Name<select id="studentCourse" required><option value="ICTT">ICTT</option><option value="Graphic Design">Graphic Design</option><option value="School ICT Book Grade 6-11">School ICT Book Grade 6-11</option><option value="Kid Course">Kid Course</option></select></label>
+          <label>Class Day<select id="studentGroup" required><option value="Monday">Monday</option><option value="Tuesday">Tuesday</option><option value="Wednesday">Wednesday</option><option value="Thursday">Thursday</option><option value="Friday">Friday</option><option value="Saturday">Saturday</option><option value="Flexible">Flexible / No Fixed Day</option></select><small id="classDayHelp">Required for regular courses.</small></label>
+          <label>Joined Date<input id="joinedDate" type="date" required></label>
+          <label>Total Course Fee (Rs.)<input id="courseFee" type="number" min="0" step="100" required></label>
+          <label>Amount Paid (Rs.)<input id="amountPaid" type="number" min="0" step="100" required></label>
+        </div>
+        <div class="modal-actions"><button type="button" class="button ghost" data-close="studentModal">Cancel</button><button type="submit" class="button primary">Save Student</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="paymentModal">
+    <div class="modal small">
+      <div class="modal-head"><div><span class="section-kicker">PAYMENT</span><h3>Record Payment</h3></div><button class="close-button" data-close="paymentModal">×</button></div>
+      <form id="paymentForm">
+        <input type="hidden" id="paymentStudentId">
+        <div class="payment-person" id="paymentPerson"></div>
+        <label>New Payment Amount (Rs.)<input id="newPayment" type="number" min="100" step="100" required></label>
+        <div class="modal-actions"><button type="button" class="button ghost" data-close="paymentModal">Cancel</button><button type="submit" class="button primary">Add Payment</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="receiptModal">
+    <div class="modal receipt-modal">
+      <div class="modal-head"><div><span class="section-kicker">PAYMENT CONFIRMATION</span><h3>Student Payment Receipt</h3></div><button class="close-button" data-close="receiptModal">×</button></div>
+      <div class="receipt-paper" id="receiptPaper">
+        <div class="receipt-brand"><img src="assets/enp-logo.jpg" alt="ENP logo"><div><h2>E nena Piyasa</h2><span>Computer Technology Center</span></div><strong>RECEIPT</strong></div>
+        <div class="receipt-meta"><span>Receipt No.<strong id="receiptNumber"></strong></span><span>Date & Time<strong id="receiptDate"></strong></span></div>
+        <div class="receipt-student"><span>Received From<strong id="receiptStudent"></strong></span><span>Student ID<strong id="receiptStudentId"></strong></span><span>Course<strong id="receiptCourse"></strong></span><span>WhatsApp Number<strong id="receiptPhone"></strong></span></div>
+        <div class="receipt-amount"><span>Payment Received</span><strong id="receiptPayment"></strong></div>
+        <div class="receipt-totals"><span>Course Fee<strong id="receiptFee"></strong></span><span>Total Paid<strong id="receiptTotalPaid"></strong></span><span>Outstanding Balance<strong id="receiptBalance"></strong></span><span>Payment Status<strong id="receiptStatus"></strong></span></div>
+        <div class="receipt-note">Thank you. This is a computer-generated payment receipt.</div>
+      </div>
+      <div class="modal-actions receipt-actions"><button class="button ghost" data-close="receiptModal">Close</button><button class="button secondary" id="printReceipt">Download PDF</button><button class="button whatsapp-button" id="whatsappReceipt">Share PDF Receipt</button></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="profileModal">
+    <div class="modal">
+      <div class="modal-head"><div><span class="section-kicker">ACCOUNT</span><h3>Profile Settings</h3></div><button class="close-button" data-close="profileModal">×</button></div>
+      <div class="profile-hero"><span class="profile-avatar large" id="profileModalInitials">AD</span><div><strong id="profileHeroName">Administrator</strong><small>System administrator account</small></div></div>
+      <form id="profileForm">
+        <div class="form-grid">
+          <label>Administrator Name<input id="profileName" required></label>
+          <label>Role / Position<input id="profileRole" required></label>
+          <label>Email Address<input id="profileEmail" type="email" placeholder="admin@example.com"></label>
+          <label>Phone Number<input id="profilePhone" placeholder="07X XXX XXXX"></label>
+        </div>
+        <div class="modal-actions"><button type="button" class="button ghost" data-close="profileModal">Cancel</button><button type="submit" class="button primary">Save Profile</button></div>
+      </form>
+      <div class="settings-divider"></div>
+      <form id="pinForm">
+        <div class="modal-head compact-head"><div><span class="section-kicker">SECURITY</span><h3>Change Login PIN</h3></div></div>
+        <div class="form-grid">
+          <label class="full">Current PIN<input id="currentPin" type="password" inputmode="numeric" minlength="4" maxlength="8" required></label>
+          <label>New PIN<input id="newPin" type="password" inputmode="numeric" minlength="4" maxlength="8" required></label>
+          <label>Confirm New PIN<input id="confirmPin" type="password" inputmode="numeric" minlength="4" maxlength="8" required></label>
+        </div>
+        <div class="modal-actions"><button type="submit" class="button primary">Update PIN</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="attendanceResultModal">
+    <div class="modal result-modal">
+      <div class="modal-head"><div><span class="section-kicker">FINAL RESULT</span><h3>Daily Attendance Report</h3></div><button class="close-button" data-close="attendanceResultModal">×</button></div>
+      <div class="result-heading"><div><span id="resultDay">Monday Register</span><strong id="resultDate"></strong></div><button class="button secondary" id="exportAttendance">Export CSV</button></div>
+      <div class="attendance-summary result-summary">
+        <div><span>Expected</span><strong id="resultExpected">0</strong></div><div><span>Present</span><strong id="resultPresent">0</strong></div><div><span>Absent</span><strong id="resultAbsent">0</strong></div><div><span>Attendance</span><strong id="resultPercent">0%</strong></div>
+      </div>
+      <div class="result-columns">
+        <section class="result-list present-list"><div class="result-list-head"><h3>Present Students</h3><span id="presentResultCount">0</span></div><div id="presentResultList"></div></section>
+        <section class="result-list absent-list"><div class="result-list-head"><h3>Absent Students</h3><span id="absentResultCount">0</span></div><div id="absentResultList"></div></section>
+      </div>
+      <div class="modal-actions"><button class="button primary" data-close="attendanceResultModal">Done</button></div>
+    </div>
+  </div>
+
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <img src="assets/enp-logo.jpg" alt="E nena Piyasa logo">
+      <span class="section-kicker">SECURE ACCESS</span>
+      <h2>Welcome back</h2>
+      <p>Enter your administrator PIN to open the management system.</p>
+      <form id="loginForm">
+        <label>Login PIN<input id="loginPin" type="password" inputmode="numeric" minlength="4" maxlength="8" placeholder="Enter PIN" autocomplete="current-password" required></label>
+        <small id="loginError"></small>
+        <button type="submit" class="button primary">Unlock System</button>
+      </form>
+      <div class="login-hint" id="loginHint">Default PIN for first login: <strong>1234</strong></div>
+      <footer>Powered by <strong>Blank-X-Innovation</strong></footer>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
