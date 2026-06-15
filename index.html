@@ -25,6 +25,10 @@
         <button class="nav-item" data-view="history"><span>◷</span> Register History</button>
         <button class="nav-item" data-view="payments"><span>₨</span> Payments</button>
         <button class="nav-item" data-view="receiptLookup"><span>▤</span> Receipt Lookup</button>
+        <button class="nav-item" data-view="examResults"><span>◎</span> ICTT Exam Results</button>
+        <button class="nav-item" data-view="incomeSummary"><span>▥</span> Income Summary</button>
+        <button class="nav-item" data-view="analytics"><span>⌁</span> Analytics</button>
+        <button class="nav-item" data-view="backup"><span>⇅</span> System Backup</button>
         <div class="course-nav">
           <span class="course-nav-title">COURSES</span>
           <button class="course-nav-item" data-course-nav="ICTT"><span class="course-dot blue-dot"></span><strong>ICTT</strong><small data-course-count="ICTT">0</small></button>
@@ -38,6 +42,7 @@
         <div><strong>System ready</strong><small>Data auto-saved locally</small></div>
       </div>
     </aside>
+    <button class="sidebar-backdrop" id="sidebarBackdrop" aria-label="Close navigation menu"></button>
 
     <main class="main">
       <header class="topbar">
@@ -64,11 +69,12 @@
 
       <section class="content view active" id="dashboardView">
         <div class="welcome-banner">
-          <div>
-            <span class="banner-tag">E nena Piyasa</span>
-            <h2>Student operations,<br><em>all in one place.</em></h2>
-            <p>Manage registrations, payments and daily attendance with a clear view of every class group.</p>
-            <button class="button light" data-go="attendance">Mark today's register →</button>
+          <div class="welcome-copy">
+            <span class="banner-tag">E nena Piyasa Management Center</span>
+            <h2 id="welcomeGreeting">Welcome back,<br><em>Administrator.</em></h2>
+            <p id="welcomeDate">Manage registrations, payments and daily attendance with a clear view of every class group.</p>
+            <div class="welcome-actions"><button class="button light" data-go="attendance">Mark today's register →</button><button class="welcome-link" data-go="students">View students</button></div>
+            <div class="welcome-mini-stats"><span><small>Registered</small><strong id="welcomeStudents">0 students</strong></span><span><small>Pending fees</small><strong id="welcomePending">0 students</strong></span><span><small>Today's class</small><strong id="welcomeClassDay">Monday</strong></span></div>
           </div>
           <div class="banner-art" aria-hidden="true">
             <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
@@ -93,6 +99,10 @@
             <div id="paymentFollowup" class="followup-list"></div>
           </article>
         </div>
+        <article class="panel low-attendance-panel">
+          <div class="panel-head"><div><span class="section-kicker">ATTENDANCE ALERTS</span><h3>Students with low attendance</h3></div><button class="text-button" data-go="backup">View complete report →</button></div>
+          <div id="dashboardLowAttendance" class="low-attendance-list"></div>
+        </article>
         <article class="panel">
           <div class="panel-head"><div><span class="section-kicker">RECENT</span><h3>Latest registrations</h3></div></div>
           <div class="table-wrap"><table><thead><tr><th>Student</th><th>Contact</th><th>Course</th><th>Class Group</th><th>Payment</th></tr></thead><tbody id="recentStudents"></tbody></table></div>
@@ -105,7 +115,7 @@
           <button class="button primary" id="addStudent">+ Add New Student</button>
         </div>
         <div class="filter-bar">
-          <label class="search-box"><span>⌕</span><input id="studentSearch" type="search" placeholder="Search name, ID, phone or course..."></label>
+          <label class="search-box"><span>⌕</span><input id="studentSearch" type="search" placeholder="Search name, full ID or ID ending 001..."></label>
           <select id="courseFilter"><option value="all">All courses</option><option value="ICTT">ICTT</option><option value="Graphic Design">Graphic Design</option><option value="School ICT Book Grade 6-11">School ICT Book Grade 6-11</option><option value="Kid Course">Kid Course</option></select>
           <select id="groupFilter"><option value="all">All class days</option><option value="Monday">Monday</option><option value="Tuesday">Tuesday</option><option value="Wednesday">Wednesday</option><option value="Thursday">Thursday</option><option value="Friday">Friday</option><option value="Saturday">Saturday</option><option value="Flexible">Flexible / No Fixed Day</option></select>
           <select id="statusFilter"><option value="all">All payment status</option><option value="Paid">Paid</option><option value="Pending">Pending</option></select>
@@ -126,7 +136,7 @@
           <div><span>Expected</span><strong id="expectedCount">0</strong></div><div><span>Present</span><strong id="presentCount">0</strong></div><div><span>Absent</span><strong id="absentCount">0</strong></div><div><span>Attendance</span><strong id="attendancePercent">0%</strong></div>
         </div>
         <div class="filter-bar">
-          <label class="search-box"><span>⌕</span><input id="attendanceSearch" type="search" placeholder="Search students..."></label>
+          <label class="search-box"><span>⌕</span><input id="attendanceSearch" type="search" placeholder="Search name, full ID or ID ending 001..."></label>
           <div class="selected-day"><small>Selected class day</small><strong id="selectedClassDay">Monday</strong></div>
           <button class="button secondary" id="markAllPresent">Mark all present</button>
           <button class="button ghost" id="clearAttendance">Clear marks</button>
@@ -135,10 +145,9 @@
       </section>
 
       <section class="content view" id="kidAttendanceView">
-        <div class="section-toolbar"><div><p class="muted">Select the Kid Course students attending on any chosen date.</p></div><div class="attendance-actions"><label class="date-input">Register Date <input type="date" id="kidAttendanceDate"></label><button class="button primary" id="saveKidAttendance">Save Kid Register</button></div></div>
-        <div class="attendance-summary"><div><span>Selected</span><strong id="kidExpectedCount">0</strong></div><div><span>Present</span><strong id="kidPresentCount">0</strong></div><div><span>Absent</span><strong id="kidAbsentCount">0</strong></div><div><span>Attendance</span><strong id="kidAttendancePercent">0%</strong></div></div>
-        <article class="panel kid-attendance-panel"><div><span class="section-kicker">FLEXIBLE ATTENDANCE</span><h3>Choose Kid Course Students</h3><p class="muted">Select only the kids included in this register.</p></div><div class="kid-selector" id="kidSelector"></div></article>
-        <div class="filter-bar"><label class="search-box"><span>⌕</span><input id="kidAttendanceSearch" type="search" placeholder="Search Kid Course students..."></label><button class="button secondary" id="markAllKidsPresent">Mark selected present</button><button class="button ghost" id="clearKidAttendance">Clear marks</button></div>
+        <div class="section-toolbar"><div><p class="muted">Choose any register date manually and mark every Kid Course student's attendance.</p></div><div class="attendance-actions"><button class="button secondary" id="downloadKidAttendanceBackup">Download JSON Backup</button><label class="date-input">Register Date <input type="date" id="kidAttendanceDate"></label><button class="button primary" id="saveKidAttendance">Save Kid Register</button></div></div>
+        <div class="attendance-summary"><div><span>Total Kids</span><strong id="kidExpectedCount">0</strong></div><div><span>Present</span><strong id="kidPresentCount">0</strong></div><div><span>Absent</span><strong id="kidAbsentCount">0</strong></div><div><span>Attendance</span><strong id="kidAttendancePercent">0%</strong></div></div>
+        <div class="filter-bar"><label class="search-box"><span>⌕</span><input id="kidAttendanceSearch" type="search" placeholder="Search name, full ID or ID ending 001..."></label><div class="selected-day"><small>Manually selected day</small><strong id="kidSelectedDay">Monday</strong></div><button class="button secondary" id="markAllKidsPresent">Mark all present</button><button class="button ghost" id="clearKidAttendance">Clear marks</button></div>
         <article class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>Student</th><th>Course</th><th>Class Group</th><th class="center">Present</th><th class="center">Absent</th></tr></thead><tbody id="kidAttendanceTable"></tbody></table></div></article>
       </section>
 
@@ -149,22 +158,68 @@
           <article class="stat-card blue"><div><span>Total Collected</span><strong id="totalCollected">Rs. 0</strong></div></article>
           <article class="stat-card gold"><div><span>Total Outstanding</span><strong id="totalOutstanding">Rs. 0</strong></div></article>
         </div>
-        <div class="filter-bar"><label class="search-box"><span>⌕</span><input id="paymentSearch" type="search" placeholder="Search student or course..."></label><select id="paymentFilter"><option value="all">All payment status</option><option value="Paid">Paid</option><option value="Pending">Pending</option></select></div>
+        <div class="filter-bar"><label class="search-box"><span>⌕</span><input id="paymentSearch" type="search" placeholder="Search name, full ID or ID ending 001..."></label><select id="paymentFilter"><option value="all">All payment status</option><option value="Paid">Paid</option><option value="Pending">Pending</option></select></div>
         <article class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>Student</th><th>Course</th><th>Total Fee</th><th>Paid</th><th>Outstanding</th><th>Progress</th><th></th></tr></thead><tbody id="paymentsTable"></tbody></table></div></article>
       </section>
 
       <section class="content view" id="historyView">
         <div class="section-toolbar"><div><p class="muted">Review every previously saved day register and reopen its complete report.</p></div><button class="button secondary" id="historyBackup">Download JSON Backup</button></div>
         <div class="history-overview"><article><span>Total Registers</span><strong id="historyTotal">0</strong></article><article><span>Total Present Marks</span><strong id="historyPresent">0</strong></article><article><span>Total Absent Marks</span><strong id="historyAbsent">0</strong></article></div>
-        <div class="filter-bar"><label class="search-box"><span>⌕</span><input id="historySearch" type="search" placeholder="Search by date, day or course..."></label></div>
+        <div class="filter-bar"><label class="search-box"><span>⌕</span><input id="historySearch" type="search" placeholder="Search date, student name or ID ending 001..."></label></div>
         <div class="history-grid" id="historyGrid"></div>
       </section>
 
       <section class="content view" id="receiptLookupView">
-        <div class="section-toolbar"><div><p class="muted">Enter a receipt ID to verify and reopen a previously generated payment receipt.</p></div></div>
-        <article class="panel receipt-lookup-box"><div><span class="section-kicker">RECEIPT VERIFICATION</span><h3>Find Payment Receipt</h3><p class="muted">Example: ENP-20260615-123456</p></div><form id="receiptLookupForm"><input id="receiptLookupInput" placeholder="Enter Receipt ID" required><button class="button primary" type="submit">Find Receipt</button></form><p class="lookup-message" id="receiptLookupMessage"></p></article>
-        <div class="panel-head receipt-list-head"><div><span class="section-kicker">RECENT</span><h3>Generated Receipts</h3></div><strong id="receiptCount">0 receipts</strong></div>
+        <div class="section-toolbar"><div><p class="muted">Verify, search and reopen every previously generated payment receipt.</p></div></div>
+        <article class="receipt-lookup-hero">
+          <div><span class="section-kicker">RECEIPT VERIFICATION</span><h3>Find an official payment receipt</h3><p>Enter the complete Receipt ID to instantly verify and reopen its professional PDF receipt.</p></div>
+          <form id="receiptLookupForm"><input id="receiptLookupInput" placeholder="ENP-20260615-123456" required><button class="button primary" type="submit">Verify Receipt</button></form>
+          <p class="lookup-message" id="receiptLookupMessage"></p>
+        </article>
+        <div class="receipt-overview"><article><span>Total Receipts</span><strong id="receiptTotalCount">0</strong></article><article><span>Total Receipt Value</span><strong id="receiptTotalValue">Rs. 0</strong></article><article><span>Latest Receipt</span><strong id="receiptLatestDate">No receipts</strong></article></div>
+        <div class="filter-bar receipt-filters"><label class="search-box"><span>⌕</span><input id="receiptSearch" type="search" placeholder="Search receipt, student name or ID ending 001..."></label><select id="receiptCourseFilter"><option value="all">All courses</option><option value="ICTT">ICTT</option><option value="Graphic Design">Graphic Design</option><option value="School ICT Book Grade 6-11">School ICT Book Grade 6-11</option><option value="Kid Course">Kid Course</option></select><select id="receiptStatusFilter"><option value="all">All payment status</option><option value="Paid">Paid</option><option value="Pending">Pending</option></select></div>
+        <div class="panel-head receipt-list-head"><div><span class="section-kicker">RECEIPT ARCHIVE</span><h3>Generated Receipts</h3></div><strong id="receiptCount">0 receipts</strong></div>
         <div class="receipt-grid" id="receiptGrid"></div>
+      </section>
+
+      <section class="content view" id="backupView">
+        <div class="section-toolbar"><div><p class="muted">Protect, restore and manage the complete E nena Piyasa system data.</p></div></div>
+        <article class="backup-hero"><div><span class="section-kicker">SYSTEM DATA CENTER</span><h3>Full Backup & Restore</h3><p>Export every student, attendance register, exam result, financial summary, receipt, profile and system setting into one JSON backup file.</p></div><div class="backup-actions"><button class="button light" id="exportFullBackup">Export Full Backup</button><button class="button backup-outline" id="importFullBackup">Import Backup</button><input id="backupFileInput" type="file" accept=".json,application/json" hidden></div></article>
+        <div class="backup-overview"><article><span>Students</span><strong id="backupStudentCount">0</strong></article><article><span>Registers</span><strong id="backupRegisterCount">0</strong></article><article><span>Receipts</span><strong id="backupReceiptCount">0</strong></article><article><span>Low Attendance</span><strong id="backupLowCount">0</strong></article></div>
+        <article class="panel low-report-panel">
+          <div class="panel-head"><div><span class="section-kicker">ATTENDANCE REPORT</span><h3>Students below 75% attendance</h3></div><span class="muted" id="lowAttendanceCount">0 students</span></div>
+          <div class="filter-bar"><label class="search-box"><span>⌕</span><input id="lowAttendanceSearch" type="search" placeholder="Search name, full ID or ID ending 001..."></label></div>
+          <div class="table-wrap"><table><thead><tr><th>Student</th><th>Course</th><th>Class Group</th><th>Present</th><th>Absent</th><th>Attendance Rate</th></tr></thead><tbody id="lowAttendanceTable"></tbody></table></div>
+        </article>
+        <article class="danger-zone"><div><span class="section-kicker">DANGER ZONE</span><h3>Full System Reset</h3><p>Deletes all students, registers, receipts, profile settings and login PIN from this browser.</p></div><button class="button danger-button" id="fullSystemReset">Full Reset System</button></article>
+      </section>
+
+      <section class="content view" id="analyticsView">
+        <div class="section-toolbar"><div><p class="muted">Understand attendance, course popularity and payment collection performance.</p></div><div class="analytics-filters"><select id="analyticsPeriod"><option value="weekly">Weekly · Last 7 Days</option><option value="monthly">Monthly · Last 6 Months</option></select><select id="analyticsCourse"><option value="all">All Courses</option><option value="ICTT">ICTT</option><option value="Graphic Design">Graphic Design</option><option value="School ICT Book Grade 6-11">School ICT Book Grade 6-11</option><option value="Kid Course">Kid Course</option></select></div></div>
+        <div class="analytics-summary"><article><span>Average Attendance</span><strong id="analyticsAttendanceRate">0%</strong><small id="analyticsAttendanceDetail">0 present marks</small></article><article><span>Payment Collection</span><strong id="analyticsCollection">Rs. 0</strong><small id="analyticsReceiptDetail">0 receipts</small></article><article><span>Most Popular Course</span><strong id="analyticsPopular">No data</strong><small id="analyticsPopularDetail">0 students</small></article><article><span>Active Students</span><strong id="analyticsStudents">0</strong><small>Matching selected course</small></article></div>
+        <div class="analytics-grid">
+          <article class="panel analytics-wide"><div class="panel-head"><div><span class="section-kicker">ATTENDANCE TREND</span><h3 id="attendanceChartTitle">Weekly attendance</h3></div><span class="chart-legend"><i></i> Attendance rate</span></div><div class="column-chart" id="attendanceChart"></div></article>
+          <article class="panel"><div class="panel-head"><div><span class="section-kicker">COURSE DEMAND</span><h3>Popular courses</h3></div></div><div class="course-chart" id="courseChart"></div></article>
+          <article class="panel analytics-wide"><div class="panel-head"><div><span class="section-kicker">PAYMENT PERFORMANCE</span><h3 id="paymentChartTitle">Weekly payment collection</h3></div><span class="chart-legend gold-legend"><i></i> Receipt value</span></div><div class="column-chart payment-chart" id="paymentChart"></div></article>
+          <article class="panel"><div class="panel-head"><div><span class="section-kicker">PAYMENT STATUS</span><h3>Fee completion</h3></div></div><div class="donut-wrap"><div class="donut-chart" id="paymentDonut"><span id="paymentDonutRate">0%</span></div><div class="donut-details"><span><i class="paid-dot"></i>Paid<strong id="analyticsPaidStudents">0</strong></span><span><i class="pending-dot"></i>Pending<strong id="analyticsPendingStudents">0</strong></span></div></div></article>
+        </div>
+      </section>
+
+      <section class="content view" id="examResultsView">
+        <div class="section-toolbar"><div><p class="muted">Record and review ICTT student Mid and Final test results.</p></div><div class="exam-toolbar"><form id="examIdLookupForm"><div class="exam-search-wrap"><input id="examStudentIdLookup" placeholder="Search name or ID ending 001..." autocomplete="off" role="combobox" aria-expanded="false" aria-controls="examStudentSuggestions"><div class="exam-suggestions" id="examStudentSuggestions"></div></div><button class="button secondary" type="submit">Select Student</button></form><select id="examStudentSelect"></select><button class="button primary" id="saveExamResults">Save Exam Results</button><small id="examLookupMessage"></small></div></div>
+        <article class="exam-hero"><div><span class="section-kicker">ICTT ASSESSMENT CENTER</span><h2>ICTT Student Exam Results</h2><p>Windows · Word · Excel · PowerPoint · Access</p></div><div class="exam-student-card" id="examStudentCard"></div><div class="exam-grade-card"><span>Overall Summary</span><strong id="examOverallGrade">—</strong><small id="examOverallScore">0 / 24 correct</small></div></article>
+        <div class="exam-summary-grid"><article><span>Completed Items</span><strong id="examCompletedCount">0 / 24</strong></article><article><span>Correct Answers</span><strong id="examCorrectCount">0</strong></article><article><span>Success Rate</span><strong id="examSuccessRate">0%</strong></article><article><span>Last Updated</span><strong id="examUpdatedAt">Not saved</strong></article></div>
+        <div class="exam-modules" id="examModules"></div>
+        <article class="panel exam-overview-panel"><div class="panel-head"><div><span class="section-kicker">ICTT CLASS OVERVIEW</span><h3>Student Result Summary</h3></div><span class="muted" id="examStudentCount">0 ICTT students</span></div><div class="table-wrap"><table><thead><tr><th>Student</th><th>Completed</th><th>Correct</th><th>Score</th><th>Overall Grade</th></tr></thead><tbody id="examOverviewTable"></tbody></table></div></article>
+      </section>
+
+      <section class="content view" id="incomeSummaryView">
+        <div class="section-toolbar"><div><p class="muted">Enter monthly income and expenses to calculate annual profit automatically.</p></div><div class="income-toolbar"><label>Financial Year <select id="incomeYear"><option value="2026">2026</option></select></label><button class="button primary" id="downloadIncomePDF">Download PDF</button></div></div>
+        <article class="income-hero"><div class="income-hero-copy"><span class="section-kicker">FINANCIAL OVERVIEW</span><h2>Income Summary</h2><p id="incomeHeroYear">Financial Year 2026</p><small>Track every monthly earning and operating expense in one clear view.</small></div><div class="income-metric income-earned"><i>↗</i><span>Total Income</span><strong id="annualIncome">Rs. 0</strong><small>Annual course earnings</small></div><div class="income-metric income-spent"><i>↘</i><span>Total Expenses</span><strong id="annualExpenses">Rs. 0</strong><small>Annual operating costs</small></div><div class="income-metric profit-total"><i>◎</i><span>Annual Profit</span><strong id="annualProfit">Rs. 0</strong><small>Income minus expenses</small></div></article>
+        <article class="panel income-table-panel">
+          <div class="panel-head"><div><span class="section-kicker">MONTHLY FINANCIAL TABLE</span><h3>2026 Income & Expense Summary</h3></div><div class="income-legend"><span><i class="legend-income"></i>Income</span><span><i class="legend-expense"></i>Expenses</span><span><i class="legend-profit"></i>Profit</span><small>Auto-saved</small></div></div>
+          <div class="table-wrap income-table-wrap"><table class="income-table"><thead><tr><th rowspan="2">Month</th><th colspan="4" class="income-group">Income</th><th rowspan="2">Total Income</th><th colspan="5" class="expense-group">Expenses</th><th rowspan="2">Total Expenses</th><th rowspan="2">Profit</th></tr><tr><th>ICTT</th><th>Graphic</th><th>IT</th><th>Kid</th><th>Electric</th><th>Telephone Bill</th><th>Instructor Price</th><th>Machine Repair</th><th>Toner</th></tr></thead><tbody id="incomeSummaryTable"></tbody><tfoot id="incomeSummaryFooter"></tfoot></table></div>
+        </article>
       </section>
 
       <footer>Designed & Developed by <strong>Blank-X-Innovation</strong><span>•</span> E nena Piyasa Management System</footer>
@@ -175,8 +230,9 @@
     <div class="modal">
       <div class="modal-head"><div><span class="section-kicker">REGISTRATION</span><h3 id="modalTitle">Add New Student</h3></div><button class="close-button" data-close="studentModal">×</button></div>
       <form id="studentForm">
-        <input type="hidden" id="studentId">
+        <input type="hidden" id="studentOriginalId">
         <div class="form-grid">
+          <label class="full student-id-field">Student ID<input id="studentId" required placeholder="2026/ICTT/001"><small id="studentIdHelp">Auto-generated from joined year and course. You can customize it before saving.</small></label>
           <label class="full">Student Full Name<input id="studentName" required placeholder="Enter full name"></label>
           <label>Phone Number<input id="studentPhone" required placeholder="07X XXX XXXX"></label>
           <label>Guardian Phone<input id="guardianPhone" placeholder="07X XXX XXXX"></label>
