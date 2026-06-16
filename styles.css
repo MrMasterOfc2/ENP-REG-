@@ -84,6 +84,9 @@ button{
 }
 button:focus-visible,input:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 .lookup-message{min-height:22px;margin-top:13px;color:#ffd1d1;font-size:12px;font-weight:700}
+.lookup-message.success{color:#b9f2d6}
+.lookup-message.error{color:#ffd1d1}
+.lookup-message.warning{color:#ffd36a}
 .suggestions{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;max-width:700px;margin-top:8px}
 .suggestions:empty{display:none}
 .suggestions button{

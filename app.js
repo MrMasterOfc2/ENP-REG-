@@ -3,6 +3,11 @@ const EXAM_MODULES=[{key:"windows",name:"Windows",tests:["final"]},{key:"word",n
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 const money=n=>"Rs. "+Number(n||0).toLocaleString("en-US");
+const COURSE_FEES={"ICTT":7000,"Graphic Design":13500,"Kid Course":8000};
+const COURSE_MIGRATION={"Computer Basics":"ICTT","MS Office Professional":"ICTT","Web Development":"ICTT","Graphic Design":"Graphic Design","School ICT Book Grade 6-11":"School ICT Book Grade 6-11","Kid Course":"Kid Course"};
+const expectedFee=student=>Number(COURSE_FEES[student?.course]||student?.fee||0);
+const outstanding=student=>Math.max(0,expectedFee(student)-Number(student?.paid||0));
+const paymentRate=student=>expectedFee(student)?Math.min(100,Math.round(Number(student?.paid||0)/expectedFee(student)*100)):100;
 const initials=name=>String(name||"ST").split(" ").filter(Boolean).slice(0,2).map(x=>x[0]).join("").toUpperCase();
 const idEnding=id=>String(id||"").split(/[/-]/).filter(Boolean).at(-1)||String(id||"");
 const classDayForDate=date=>date?["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][new Date(`${date}T00:00:00`).getDay()]:"";
@@ -13,7 +18,8 @@ const formatDate=date=>{
 };
 const localDateKey=date=>`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
 const currentMonthKey=()=>localDateKey(new Date()).slice(0,7);
-let students=JSON.parse(localStorage.getItem(STORAGE.students)||"[]");
+function normalizeStudents(list=[]){return list.map(student=>({...student,course:COURSE_MIGRATION[student.course]||student.course,paid:Number(student.paid||0),fee:Number(student.fee||0)}))}
+let students=normalizeStudents(JSON.parse(localStorage.getItem(STORAGE.students)||"[]"));
 let attendance=JSON.parse(localStorage.getItem(STORAGE.attendance)||"{}");
 let examResults=JSON.parse(localStorage.getItem(STORAGE.examResults)||"{}");
 let receipts=JSON.parse(localStorage.getItem(STORAGE.receipts)||"[]");
@@ -21,7 +27,7 @@ let installPromptEvent=null;
 let currentStudent=null;
 
 function refreshData(){
-  students=JSON.parse(localStorage.getItem(STORAGE.students)||"[]");
+  students=normalizeStudents(JSON.parse(localStorage.getItem(STORAGE.students)||"[]"));
   attendance=JSON.parse(localStorage.getItem(STORAGE.attendance)||"{}");
   examResults=JSON.parse(localStorage.getItem(STORAGE.examResults)||"{}");
   receipts=JSON.parse(localStorage.getItem(STORAGE.receipts)||"[]");
@@ -49,7 +55,7 @@ function findStudents(query){
     return{student,rank};
   }).filter(Boolean).sort((a,b)=>a.rank-b.rank||a.student.name.localeCompare(b.student.name)).slice(0,8).map(item=>item.student);
 }
-function showMessage(text,type="error"){$("#lookupMessage").textContent=text;$("#lookupMessage").style.color=type==="ok"?"#d9fce9":"#ffd1d1"}
+function showMessage(text,type="error"){const el=$("#lookupMessage");el.textContent=text;el.className=`lookup-message ${type==="ok"?"success":type||"error"}`}
 function renderProfileLines(student){
   $("#profileLines").innerHTML=[
     ["Student ID",student.id],
@@ -94,8 +100,8 @@ function selectStudent(student){
   const present=rows.filter(r=>r.value==="present").length;
   const absent=rows.filter(r=>r.value==="absent").length;
   const total=present+absent;
-  const due=Math.max(0,Number(student.fee||0)-Number(student.paid||0));
-  const payRate=student.fee?Math.round(Number(student.paid||0)/Number(student.fee||1)*100):100;
+  const due=outstanding(student);
+  const payRate=paymentRate(student);
   const examRecord=examResults[student.id]?.modules||{};
   const stats=student.course==="ICTT"?examStats(examRecord):null;
   const studentReceiptList=studentReceipts(student);
@@ -116,7 +122,7 @@ function selectStudent(student){
   $("#paymentDetail").textContent=due?"Outstanding balance":"Payment complete";
   $("#classDay").textContent=student.group||"-";
   $("#joinedDate").textContent=`Joined ${student.joined||"-"}`;
-  $("#totalFee").textContent=money(student.fee);
+  $("#totalFee").textContent=money(expectedFee(student));
   $("#totalPaid").textContent=money(student.paid);
   $("#outstanding").textContent=money(due);
   $("#paymentProgress").style.width=`${Math.min(100,payRate)}%`;
@@ -192,8 +198,8 @@ $("#shareWhatsapp").addEventListener("click",()=>{
   const absent=rows.filter(r=>r.value==="absent").length;
   const total=rows.length;
   const rate=total?Math.round(present/total*100):0;
-  const due=Math.max(0,Number(currentStudent.fee||0)-Number(currentStudent.paid||0));
-  const payRate=currentStudent.fee?Math.round(Number(currentStudent.paid||0)/Number(currentStudent.fee||1)*100):100;
+  const due=outstanding(currentStudent);
+  const payRate=paymentRate(currentStudent);
   const examRecord=examResults[currentStudent.id]?.modules||{};
   const stats=currentStudent.course==="ICTT"?examStats(examRecord):null;
   const phone=studentPhone(currentStudent);
@@ -225,7 +231,7 @@ $("#shareWhatsapp").addEventListener("click",()=>{
     stats?`• Score: ${stats.rate}%\n• Grade: ${stats.grade}\n• Correct: ${stats.correct}/${stats.total}\n• Exam Absent Items: ${stats.absent}`:"• ICTT exam results only / Not available",
     "",
     "💳 *Payment Summary*",
-    `• Total Fee: ${money(currentStudent.fee)}`,
+    `• Total Fee: ${money(expectedFee(currentStudent))}`,
     `• Total Paid: ${money(currentStudent.paid)}`,
     `• Outstanding: ${money(due)}`,
     `• Payment Progress: ${payRate}%`,

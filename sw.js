@@ -1,4 +1,4 @@
-const CACHE_NAME="enp-student-portal-v12";
+const CACHE_NAME="enp-student-portal-v15";
 const APP_SHELL=[
   "./",
   "./index.html",

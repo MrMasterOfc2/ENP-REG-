@@ -11,6 +11,7 @@
   };
   let suppress=false;
   let remoteReady=false;
+  const channel=("BroadcastChannel" in window)?new BroadcastChannel("enp-realtime-sync"):null;
   const config=window.ENP_FIREBASE_CONFIG||{};
 
   function readLocal(){
@@ -30,6 +31,11 @@
 
   function writeLocal(data){
     if(!data)return;
+    const localStudents=JSON.parse(localStorage.getItem(keys.students)||"[]");
+    if(Array.isArray(data.students)&&data.students.length===0&&localStudents.length&&!data.updatedAt){
+      window.enpSyncPush(readLocal());
+      return;
+    }
     suppress=true;
     if(Array.isArray(data.students))localStorage.setItem(keys.students,JSON.stringify(data.students));
     if(data.attendance&&typeof data.attendance==="object")localStorage.setItem(keys.attendance,JSON.stringify(data.attendance));
@@ -41,13 +47,29 @@
     if(data.theme)localStorage.setItem(keys.theme,data.theme);
     suppress=false;
     window.dispatchEvent(new CustomEvent("enp:remote-data",{detail:data}));
+    channel?.postMessage({type:"remote-data",data});
   }
 
   window.enpSyncPush=function(data){
     if(suppress)return;
-    window.dispatchEvent(new CustomEvent("enp:local-data",{detail:data||readLocal()}));
-    if(window.enpFirebaseSet&&remoteReady)window.enpFirebaseSet(data||readLocal());
+    const payload={...(data||readLocal()),updatedAt:new Date().toISOString()};
+    window.dispatchEvent(new CustomEvent("enp:local-data",{detail:payload}));
+    window.dispatchEvent(new CustomEvent("enp:storage-data",{detail:payload}));
+    channel?.postMessage({type:"local-data",data:payload});
+    if(window.enpFirebaseSet&&remoteReady)window.enpFirebaseSet(payload);
   };
+
+  channel?.addEventListener("message",event=>{
+    const data=event.data?.data;
+    if(!data)return;
+    if(event.data.type==="local-data"){
+      writeLocal(data);
+      return;
+    }
+    if(event.data.type==="remote-data"){
+      window.dispatchEvent(new CustomEvent("enp:remote-data",{detail:data}));
+    }
+  });
 
   window.addEventListener("storage",event=>{
     if(Object.values(keys).includes(event.key)){
