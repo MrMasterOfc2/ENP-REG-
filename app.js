@@ -244,6 +244,18 @@ $("#newSearch").addEventListener("click",()=>{
   $("#lookupInput").focus();
 });
 
+function refreshSelectedStudent(){
+  const selectedId=currentStudent?.id;
+  refreshData();
+  if(selectedId){
+    const updated=students.find(student=>student.id===selectedId);
+    if(updated)selectStudent(updated);
+  }
+}
+
+window.addEventListener("enp:remote-data",refreshSelectedStudent);
+window.addEventListener("enp:storage-data",refreshSelectedStudent);
+
 if("serviceWorker" in navigator&&location.protocol!=="file:"){
   window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
 }
