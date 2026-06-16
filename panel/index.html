@@ -23,7 +23,7 @@
         <button class="nav-item" data-view="attendance"><span>✓</span> Day Register</button>
         <button class="nav-item" data-view="kidAttendance"><span>★</span> Kid Register</button>
         <button class="nav-item" data-view="history"><span>◷</span> Register History</button>
-        <button class="nav-item" data-view="payments"><span>₨</span> Payments</button>
+        <button class="nav-item" data-view="payments"><span>$</span> Payments</button>
         <button class="nav-item" data-view="receiptLookup"><span>▤</span> Receipt Lookup</button>
         <button class="nav-item" data-view="examResults"><span>◎</span> ICTT Exam Results</button>
         <button class="nav-item" data-view="incomeSummary"><span>▥</span> Income Summary</button>
@@ -39,7 +39,7 @@
       </nav>
       <div class="sidebar-note">
         <span class="live-dot"></span>
-        <div><strong>System ready</strong><small>Data auto-saved locally</small></div>
+        <div><strong>System ready</strong><small>Realtime sync ready</small></div>
       </div>
     </aside>
     <button class="sidebar-backdrop" id="sidebarBackdrop" aria-label="Close navigation menu"></button>
@@ -343,6 +343,8 @@
   </div>
 
   <div class="toast" id="toast"></div>
+  <script src="../firebase-config.js"></script>
+  <script src="../realtime-sync.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
