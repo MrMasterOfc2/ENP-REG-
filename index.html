@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#071426">
+  <title>E nena Piyasa | Student Portal</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="portal-shell">
+    <header class="portal-hero">
+      <nav>
+        <a class="brand" href="./"><img src="assets/enp-logo.jpg" alt="E nena Piyasa logo"><span><strong>E nena Piyasa</strong><small>Student Portal</small></span></a>
+        <button class="install-app hidden" id="installApp" type="button">Install App</button>
+      </nav>
+      <section class="lookup-card">
+        <span class="eyebrow">STUDENT RESULT CENTER</span>
+        <h1>Check your attendance and results</h1>
+        <p>Enter your Student ID, ID ending, or full name to view your attendance, exam result, payment status and class summary.</p>
+        <form id="lookupForm">
+          <label><span>Student ID, Name or Phone</span><input id="lookupInput" autocomplete="off" placeholder="Search by ID, last 3 digits, full name, guardian phone..."></label>
+          <button type="submit">Search</button>
+        </form>
+        <div class="lookup-message" id="lookupMessage"></div>
+        <div class="suggestions" id="suggestions"></div>
+      </section>
+    </header>
+
+    <section class="result-wrap hidden" id="resultWrap">
+      <article class="student-hero-card">
+        <div class="avatar" id="studentAvatar">ST</div>
+        <div>
+          <span class="eyebrow">STUDENT PROFILE</span>
+          <h2 id="studentName">Student Name</h2>
+          <p id="studentMeta">Student details</p>
+        </div>
+        <div class="student-actions">
+          <button class="outline-button" id="copyStudentId" type="button">Copy ID</button>
+          <button class="outline-button" id="shareWhatsapp" type="button">WhatsApp</button>
+          <button class="outline-button" id="printSummary" type="button">Print Summary</button>
+          <button class="outline-button" id="newSearch" type="button">New Search</button>
+        </div>
+      </article>
+
+      <section class="advanced-overview">
+        <article class="profile-card">
+          <span class="eyebrow">QUICK PROFILE</span>
+          <div class="profile-lines" id="profileLines"></div>
+        </article>
+      </section>
+
+      <section class="summary-grid">
+        <article><span>Exam Result</span><strong id="examRate">N/A</strong><small id="examDetail">ICTT students only</small></article>
+        <article><span>Payment Status</span><strong id="paymentStatus">Rs. 0</strong><small id="paymentDetail">Outstanding balance</small></article>
+        <article><span>Class Day</span><strong id="classDay">-</strong><small id="joinedDate">Joined date</small></article>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel">
+          <div class="panel-head"><div><span class="eyebrow">ATTENDANCE</span><h3>Present / Absent Summary</h3></div></div>
+          <div class="attendance-counts">
+            <div class="present"><span>Present Days</span><strong id="presentCount">0</strong></div>
+            <div class="absent"><span>Absent Days</span><strong id="absentCount">0</strong></div>
+          </div>
+          <div class="absent-mini-calendar">
+            <div class="mini-calendar-head">
+              <div><span>Monthly Attendance</span><small id="attendanceMonthNote">Class days in selected month</small></div>
+              <input id="attendanceMonth" type="month" aria-label="Filter attendance month">
+            </div>
+            <div class="mini-calendar-grid" id="absentMiniCalendar"></div>
+            <div class="mini-calendar-legend"><span><i class="present-key"></i>Present</span><span><i class="absent-key"></i>Absent</span></div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head"><div><span class="eyebrow">ICTT EXAMS</span><h3>Module Results</h3></div><strong id="overallGrade">N/A</strong></div>
+          <div class="module-list" id="moduleList"></div>
+        </article>
+
+        <article class="panel payment-panel">
+          <div class="panel-head"><div><span class="eyebrow">PAYMENTS</span><h3>Course Fee Summary</h3></div></div>
+          <div class="payment-bars">
+            <div><span>Total Fee</span><strong id="totalFee">Rs. 0</strong></div>
+            <div><span>Total Paid</span><strong id="totalPaid">Rs. 0</strong></div>
+            <div><span>Outstanding</span><strong id="outstanding">Rs. 0</strong></div>
+          </div>
+          <div class="progress-track"><i id="paymentProgress"></i></div>
+        </article>
+
+        <article class="panel receipt-panel">
+          <div class="panel-head"><div><span class="eyebrow">RECEIPTS</span><h3>Recent Payment Records</h3></div></div>
+          <div class="receipt-list" id="receiptList"></div>
+        </article>
+      </section>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
