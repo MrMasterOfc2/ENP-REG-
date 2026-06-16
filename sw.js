@@ -1,9 +1,11 @@
-const CACHE_NAME="enp-student-portal-v10";
+const CACHE_NAME="enp-student-portal-v11";
 const APP_SHELL=[
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
+  "./firebase-config.js",
+  "./realtime-sync.js",
   "./manifest.webmanifest",
   "./assets/enp-logo.jpg",
   "./assets/icon-192.png",
