@@ -1,8 +1,10 @@
 window.ENP_FIREBASE_CONFIG={
-  enabled:false,
-  apiKey:"",
-  authDomain:"",
-  databaseURL:"",
-  projectId:"",
-  appId:""
+  enabled:true,
+  apiKey:"AIzaSyA1n8wRePqEdAiU3_VfqSFvYJ_k4Gfcp2U",
+  authDomain:"irosh-entertainment.firebaseapp.com",
+  databaseURL:"https://irosh-entertainment-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"irosh-entertainment",
+  storageBucket:"irosh-entertainment.appspot.com",
+  messagingSenderId:"308550605993",
+  appId:"1:308550605993:web:a732a3741542b883e61db8"
 };
